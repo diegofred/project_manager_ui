@@ -3,17 +3,24 @@ import TasksList from "./TasksList";
 import $ from "jquery";
 
 class ProjectForm extends Component {
-  state = { error: false, user_logged: this.props.user_logged, project: this.props.project };
+
+  state = {
+      error: false
+  };
 
   projectIdRef = React.createRef();
   projectNameRef = React.createRef();
   projectDescriptionRef = React.createRef();
 
+  componentDidUpdate(){
+    $("#area_id").val(this.props.project != null ? this.props.project.description : "");
+  }
   handleForm = e => {
+
     e.preventDefault();
-    
+
     const project = {
-      id: this.state.project.id,
+      id: this.projectIdRef.current.value,
       name: this.projectNameRef.current.value,
       description: this.projectDescriptionRef.current.value
     };
@@ -21,10 +28,10 @@ class ProjectForm extends Component {
     if (project.name === "" || project.description === "") {
       this.setState({ error: true });
     } else {
-      this.props.saveProject(project);
       //restart Form
       e.currentTarget.reset();
       this.setState({ error: false });
+      this.props.saveProject(project);
     }
   };
 
@@ -38,6 +45,7 @@ class ProjectForm extends Component {
         taks: {}
       }
     }).done(data => {
+     
       this.setState({ projects: data.data });
     });
 
@@ -46,10 +54,16 @@ class ProjectForm extends Component {
 
   render() {
     const errors_present = this.state.error;
+    const select_project = this.props.project;
+
     return (
       <div className="card nt-5 mb-5 mt-2">
         <form onSubmit={this.handleForm}>
-          <input ref={this.projectIdRef} type="hidden" />
+          <input
+            ref={this.projectIdRef}
+            type="hidden"
+            defaultValue={select_project != null ? select_project.id : ""}
+          />
           <div className="form-group row">
             <label className="col-sm-5 col-lg-3 col-form-label">
               Project Name
@@ -60,6 +74,7 @@ class ProjectForm extends Component {
                 type="text"
                 className="form-control"
                 placeholder="Project Name"
+                defaultValue={select_project != null ? select_project.name : ""}
               />
             </div>
           </div>
@@ -70,19 +85,21 @@ class ProjectForm extends Component {
             </label>
             <div className="col-sm-7 col-lg-9">
               <textarea
+                id="area_id"
                 ref={this.projectDescriptionRef}
                 type="text"
                 className="form-control"
                 placeholder="Description"
                 rows="5"
+  
               />
             </div>
           </div>
 
-          <div className="form-group justify-content-end">
+          <div className="col-lg-6">
             <div>
               <button type="submit" className="btn btn-success w-15">
-                Save
+                Save Project
               </button>
             </div>
           </div>
@@ -94,13 +111,14 @@ class ProjectForm extends Component {
         ) : (
           ""
         )}
-
+        
         <TasksList
           project_id={!this.projectIdRef.value ? null : this.projectIdRef.value}
           user_logged={this.props.user_logged}
         />
       </div>
     );
+    
   }
 }
 

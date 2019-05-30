@@ -1,32 +1,26 @@
 import React, { Component } from "react";
 
 class Projects extends Component {
-  state = {
-    projects: this.props.projects,
-    user_logged: this.props.user_logged
 
-  };
 
-  resetState = projects => {
-    this.setState({ projects: projects });
-  };
-
-  handleDelete = (e) =>{
+  handleDelete = e => {
     e.preventDefault();
-    this.props.handleProjectAction(null,'Delete');
+    this.props.handleProjectAction(null, "Delete");
   };
 
-  handleEdit = (e) =>{
+  handleEdit = e => {
     e.preventDefault();
-    this.props.handleProjectAction(null,'Edit');
+    const selected_project = JSON.parse(
+      e.target.parentElement.parentElement.getAttribute("data")
+    );
+    this.props.handleProjectAction(selected_project, "Edit");
   };
 
   renderTableData = () => {
-    //debugger
     if (this.props.projects.length > 0) {
       return this.props.projects.map((project, index) => {
         return (
-          <tr key={project.id}>
+          <tr data={JSON.stringify(project)} key={project.id}>
             <td>{project.id}</td>
             <td>{project.name}</td>
             <td>{project.description}</td>
@@ -52,6 +46,7 @@ class Projects extends Component {
         );
       });
     } else {
+      
     }
   };
 
