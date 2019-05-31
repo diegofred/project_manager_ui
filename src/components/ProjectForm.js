@@ -1,22 +1,22 @@
 import React, { Component } from "react";
-import TasksList from "./TasksList";
+
 import $ from "jquery";
 
 class ProjectForm extends Component {
-
   state = {
-      error: false
+    error: false
   };
 
   projectIdRef = React.createRef();
   projectNameRef = React.createRef();
   projectDescriptionRef = React.createRef();
 
-  componentDidUpdate(){
-    $("#area_id").val(this.props.project != null ? this.props.project.description : "");
+  componentDidUpdate() {
+    $("#area_id").val(
+      this.props.project != null ? this.props.project.description : ""
+    );
   }
   handleForm = e => {
-
     e.preventDefault();
 
     const project = {
@@ -35,27 +35,26 @@ class ProjectForm extends Component {
     }
   };
 
-  saveTask = task => {
-    $.ajax({
-      type: "POST",
-      url: "http://192.168.0.98:3000/api/v1/tasks",
-      dataType: "application/json",
-      headers: JSON.parse(sessionStorage.getItem("user")),
-      data: {
-        taks: {}
-      }
-    }).done(data => {
-     
-      this.setState({ projects: data.data });
-    });
+  // saveTask = task => {
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "http://192.168.0.98:3000/api/v1/tasks",
+  //     dataType: "application/json",
+  //     headers: JSON.parse(sessionStorage.getItem("user")),
+  //     data: {
+  //       taks: {}
+  //     }
+  //   }).done(data => {
+  //     this.setState({ projects: data.data });
+  //   });
 
-    this.reloadProjects();
-  };
+  //   this.reloadProjects();
+  // };
 
   render() {
     const errors_present = this.state.error;
     const select_project = this.props.project;
-
+    console.log("Call render on Project FOrm");
     return (
       <div className="card nt-5 mb-5 mt-2">
         <form onSubmit={this.handleForm}>
@@ -91,7 +90,6 @@ class ProjectForm extends Component {
                 className="form-control"
                 placeholder="Description"
                 rows="5"
-  
               />
             </div>
           </div>
@@ -111,14 +109,8 @@ class ProjectForm extends Component {
         ) : (
           ""
         )}
-        
-        <TasksList
-          project_id={!this.projectIdRef.value ? null : this.projectIdRef.value}
-          user_logged={this.props.user_logged}
-        />
       </div>
     );
-    
   }
 }
 

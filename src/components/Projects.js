@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 
 class Projects extends Component {
-
-
   handleDelete = e => {
     e.preventDefault();
     this.props.handleProjectAction(null, "Delete");
@@ -46,11 +44,33 @@ class Projects extends Component {
         );
       });
     } else {
-      
     }
   };
 
   render() {
+    // const options = {
+    //   expandRowBgColor: "rgb(242, 255, 163)"
+    // };
+
+    // return (
+    //   <BootstrapTable
+    //     pagination={true}
+    //     data={this.props.projects}
+    //     options={options}
+    //     striped
+    //     search
+    //   >
+    //     <TableHeaderColumn dataField="id" isKey>
+    //       ID
+    //     </TableHeaderColumn>
+    //     <TableHeaderColumn dataField="name">Name</TableHeaderColumn>
+    //     <TableHeaderColumn dataField="description">
+    //       Description
+    //     </TableHeaderColumn>
+    //     <TableHeaderColumn>Actions
+    //     </TableHeaderColumn>
+    //   </BootstrapTable>
+    // );
     console.log("Call render on projects");
     return (
       <div className="col-12 col-md-8">
