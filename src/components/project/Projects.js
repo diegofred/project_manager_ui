@@ -71,7 +71,7 @@ class Projects extends Component {
     //     </TableHeaderColumn>
     //   </BootstrapTable>
     // );
-    console.log("Call render on projects");
+
     return (
       <div className="col-12 col-md-8">
         <h2 className="text-center">Projects</h2>

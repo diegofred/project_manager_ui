@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-import CommentsTable from "./CommentsTable";
+import CommentsTable from "../comment/CommentsTable";
 
 class TasksList extends Component {
   constructor(props) {

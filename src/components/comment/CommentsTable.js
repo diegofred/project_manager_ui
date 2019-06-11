@@ -18,7 +18,7 @@ class CommentsTable extends React.Component {
         </BootstrapTable>
       );
     } else {
-      return <p>?</p>;
+      return <p>No comments</p>;
     }
   }
 }

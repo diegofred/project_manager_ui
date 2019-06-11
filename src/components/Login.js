@@ -1,23 +1,15 @@
 import React from "react";
-import $ from "jquery";
+import { loginUser, createUser } from "./api/LoginApi";
+
 export default class Login extends React.Component {
   state = {
     logged: false,
     sign_up: false
   };
 
+  componentWillMount() {
 
-  componentWillMount(){
-    console.log('Call ComponenWillMOunt on login');
-     if(sessionStorage.getItem('user')){
-       this.setState( {
-        logged: true,
-        sign_up: false
-      });
-      this.setUserAsLogged(true);
-     }
   }
-
   email = React.createRef();
   password = React.createRef();
   password_confirmation = React.createRef();
@@ -38,92 +30,89 @@ export default class Login extends React.Component {
     this.clearForm();
   };
 
-
-  setUserAsLogged = (user_logged) =>{
-    this.props.user_logged(user_logged)
-  }
-
-
-  createUser = e => {
-    e.preventDefault();
-    console.log("A");
-    console.log("B" + this.email.value);
-    console.log("C" + this.password.value);
-    console.log("D" + this.password_confirmation.value);
-    $.ajax({
-      type: "POST",
-      url: "http://192.168.0.98:3000/auth/",
-      data: {
-        email: this.email.value,
-        password: this.password.value,
-        password_confirmation: this.password_confirmation.value,
-        confirm_success_url: "localhost:3000"
-      }
-    }).done((response, status, jqXHR) => {
-      console.log("E " + status);
-      sessionStorage.setItem(
-        "user",
-        JSON.stringify({
-          "access-token": jqXHR.getResponseHeader("access-token"),
-          'client': jqXHR.getResponseHeader("client"),
-          'uid': response.data.uid
-        })
-      );
-      this.setUserAsLogged(true);
-      //this.props.history.push('/');
-      this.setState({
-        logged: true,
-        sign_up: false
-      });
-    }).fail(function(httpObj, textStatus) {
-      if (httpObj.status === 200) console.log("200: " + textStatus);
-      else if(httpObj.status === 422){
-        alert("Please provide a valid values for email, password and password confirmation ")
-        console.log(httpObj.status + ": "+textStatus);
-      }
- 
-    });
+  setUserAsLogged = user_logged => {
+    this.props.user_logged(user_logged);
   };
 
-  handleLogin = e => {
+  createNewUser = e => {
     e.preventDefault();
-    
-    $.ajax({
-      type: "POST",
-      url: "http://192.168.0.98:3000/auth/sign_in",
-      data: {
-        email: this.email.value,
-        password: this.password.value
-      }
-    }).done((response, status, jqXHR) => {
-        console.log("E " + status);
-     //   debugger
-        sessionStorage.setItem(
-          "user",
+    const formData = {
+      email: this.email.value,
+      password: this.password.value,
+      password_confirmation: this.password_confirmation.value,
+      confirm_success_url: "localhost:3000"
+    };
 
-          JSON.stringify({
+    createUser(formData)
+      .then(response => {
 
-            'access-token': jqXHR.getResponseHeader("access-token"),
-            'client': jqXHR.getResponseHeader("client"),
-            'uid': response.data.uid
-          })
-        );
+        // sessionStorage.setItem(
+        //   "user",
+        //   JSON.stringify({
+        //     "access-token": jqXHR.getResponseHeader("access-token"),
+        //     client: jqXHR.getResponseHeader("client"),
+        //     uid: response.data.uid
+        //   })
+        // );
+
         this.setUserAsLogged(true);
         this.setState({
           logged: true,
           sign_up: false
         });
       })
-      .fail(function(httpObj, textStatus) {
-        if (httpObj.status === 200) console.log("200: " + textStatus);
-        else if(httpObj.status === 401){
-          alert("Invalid Credentials")
-          console.log(httpObj.status + ": "+textStatus);
-        }
-        debugger
-       
+      .catch(error => {
+        // if (httpObj.status === 200) console.log("200: " + textStatus);
+        // else if (httpObj.status === 422) {
+        //   alert(
+        //     "Please provide a valid values for email, password and password confirmation "
+        //   );
+        //   console.log(httpObj.status + ": " + textStatus);
+        // }
       });
   };
+
+  handleLogin = e => {
+    e.preventDefault();
+    const formData = {
+      email: this.email.value,
+      password: this.password.value
+    }
+
+    loginUser(formData).then(response=>
+      this.signinSuccessful(response)
+    ).catch(error=>{
+      // if (httpObj.status === 200) console.log("200: " + textStatus);
+      // else if (httpObj.status === 401) {
+      //   alert("Invalid Credentials");
+      //   console.log(httpObj.status + ": " + textStatus);
+      // }
+    });
+
+  };
+
+
+  signinSuccessful =  (response) => {
+    sessionStorage.setItem(
+      "user",
+      JSON.stringify({
+        "access-token": response.headers['access-token'],
+        client: response.headers['client'],
+        uid:response.headers['uid']
+        })
+    );
+ 
+    this.setUserAsLogged(true);
+    this.setState({
+      logged: true,
+      sign_up: false
+    });
+    // this.$router.replace('/records')
+  }
+
+
+
+
 
   handleLogout = e => {
     e.preventDefault();
@@ -145,13 +134,16 @@ export default class Login extends React.Component {
   };
 
   render() {
-    console.log('Call render on Login');
     if (!this.state.logged) {
       return (
         <div>
-          <h2>{!this.state.sign_up ? "Sign in" : "Sign up" } </h2>
+          <h2>{!this.state.sign_up ? "Sign in" : "Sign up"} </h2>
           <form onSubmit={this.handleLogin}>
-            <input name="email" placeholder="email" ref={input => (this.email = input)} />
+            <input
+              name="email"
+              placeholder="email"
+              ref={input => (this.email = input)}
+            />
             <input
               name="password"
               type="password"
@@ -191,7 +183,7 @@ export default class Login extends React.Component {
 
             {this.state.sign_up ? (
               <button
-                onClick={this.createUser}
+                onClick={this.createNewUser}
                 className="btn btn-success w-15"
               >
                 Create User

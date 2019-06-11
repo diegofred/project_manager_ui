@@ -35,26 +35,10 @@ class ProjectForm extends Component {
     }
   };
 
-  // saveTask = task => {
-  //   $.ajax({
-  //     type: "POST",
-  //     url: "http://192.168.0.98:3000/api/v1/tasks",
-  //     dataType: "application/json",
-  //     headers: JSON.parse(sessionStorage.getItem("user")),
-  //     data: {
-  //       taks: {}
-  //     }
-  //   }).done(data => {
-  //     this.setState({ projects: data.data });
-  //   });
-
-  //   this.reloadProjects();
-  // };
 
   render() {
     const errors_present = this.state.error;
     const select_project = this.props.project;
-    console.log("Call render on Project FOrm");
     return (
       <div className="card nt-5 mb-5 mt-2">
         <form onSubmit={this.handleForm}>
