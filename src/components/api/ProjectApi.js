@@ -1,4 +1,3 @@
-import axios from "axios";
 import { securedAxiosInstance } from "./Api";
 const API_URL = "projects";
 
@@ -18,7 +17,7 @@ export function createProject(formData) {
 }
 
 export function updateProject(formData, projectId) {
-  return axios({
+  return securedAxiosInstance({
     method: "put",
     url: `/${API_URL}/${projectId}`,
     data: formData
@@ -26,7 +25,7 @@ export function updateProject(formData, projectId) {
 }
 
 export function destroyProject(projectId) {
-  return axios({
+  return securedAxiosInstance({
     method: "delete",
     url: `/${API_URL}/${projectId}`
   });

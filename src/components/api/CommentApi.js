@@ -1,4 +1,3 @@
-import axios from "axios";
 import { securedAxiosInstance } from "./Api";
 const API_URL = "comments";
 
@@ -18,7 +17,7 @@ export function createComment(formData) {
 }
 
 export function updateComment(formData, commentId) {
-  return axios({
+  return securedAxiosInstance({
     method: "put",
     url: `/${API_URL}/${commentId}`,
     data: formData
@@ -26,7 +25,7 @@ export function updateComment(formData, commentId) {
 }
 
 export function destroyComment(commentId) {
-  return axios({
+  return securedAxiosInstance({
     method: "delete",
     url: `/${API_URL}/${commentId}`
   });

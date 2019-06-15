@@ -1,8 +1,9 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.0.98:3000";
+const BASE_URL = "https://warm-dusk-82583.herokuapp.com";
+//const BASE_URL = "192.168.0.98:3000";
+//const API_URL = "/api/v1";
 const API_URL = "/api/v1";
-//const API_URL = "https://warm-dusk-82583.herokuapp.com/api/v1";
 const securedAxiosInstance = axios.create({
   baseURL: BASE_URL+API_URL,
   headers: {

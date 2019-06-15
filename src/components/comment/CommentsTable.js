@@ -5,6 +5,18 @@ class CommentsTable extends React.Component {
   render() {
     if (this.props.data) {
       return (
+
+
+
+
+
+
+
+
+
+
+
+        
         <BootstrapTable data={this.props.data}>
           <TableHeaderColumn dataField="id" isKey={true}>
             ID

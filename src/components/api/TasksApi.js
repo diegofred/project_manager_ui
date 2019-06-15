@@ -1,4 +1,3 @@
-import axios from "axios";
 import { securedAxiosInstance } from "./Api";
 const API_URL = "tasks";
 
@@ -18,7 +17,7 @@ export function createTask(formData) {
 }
 
 export function updateTask(formData, taskId) {
-  return axios({
+  return securedAxiosInstance({
     method: "put",
     url: `/${API_URL}/${taskId}`,
     data: formData
@@ -26,7 +25,7 @@ export function updateTask(formData, taskId) {
 }
 
 export function destroyTask(taskId) {
-  return axios({
+  return securedAxiosInstance({
     method: "delete",
     url: `/${API_URL}/${taskId}`
   });

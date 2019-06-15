@@ -1,5 +1,5 @@
 import React from "react";
-import { loginUser, createUser } from "./api/LoginApi";
+import { loginUser, createUser, userLogged } from "./api/LoginApi";
 
 export default class Login extends React.Component {
   state = {
@@ -8,7 +8,10 @@ export default class Login extends React.Component {
   };
 
   componentWillMount() {
-
+    const user = userLogged();
+    if (user != null) {
+      this.setState({ logged: true });
+    }
   }
   email = React.createRef();
   password = React.createRef();
@@ -45,7 +48,6 @@ export default class Login extends React.Component {
 
     createUser(formData)
       .then(response => {
-
         // sessionStorage.setItem(
         //   "user",
         //   JSON.stringify({
@@ -77,42 +79,35 @@ export default class Login extends React.Component {
     const formData = {
       email: this.email.value,
       password: this.password.value
-    }
-
-    loginUser(formData).then(response=>
-      this.signinSuccessful(response)
-    ).catch(error=>{
-      // if (httpObj.status === 200) console.log("200: " + textStatus);
-      // else if (httpObj.status === 401) {
-      //   alert("Invalid Credentials");
-      //   console.log(httpObj.status + ": " + textStatus);
-      // }
-    });
-
+    };
+    loginUser(formData)
+      .then(response => this.signinSuccessful(response))
+      .catch(error => {
+        // if (httpObj.status === 200) console.log("200: " + textStatus);
+        // else if (httpObj.status === 401) {
+        //   alert("Invalid Credentials");
+        //   console.log(httpObj.status + ": " + textStatus);
+        // }
+      });
   };
 
-
-  signinSuccessful =  (response) => {
+  signinSuccessful = response => {
     sessionStorage.setItem(
       "user",
       JSON.stringify({
-        "access-token": response.headers['access-token'],
-        client: response.headers['client'],
-        uid:response.headers['uid']
-        })
+        "access-token": response.headers["access-token"],
+        client: response.headers["client"],
+        uid: response.headers["uid"]
+      })
     );
- 
+
     this.setUserAsLogged(true);
     this.setState({
       logged: true,
       sign_up: false
     });
     // this.$router.replace('/records')
-  }
-
-
-
-
+  };
 
   handleLogout = e => {
     e.preventDefault();

@@ -1,13 +1,10 @@
 import React from "react";
-import Header from "./components/Header";
-import Login from "./components/Login";
-import Projects from "./components/project/Projects";
-import TasksList from "./components/task/TasksList";
+
 import {
-  getProjects,
   createProject,
   updateProject
 } from "./components/api/ProjectApi";
+import Router from "./Router";
 
 class App extends React.Component {
   state = { projects: [], user_logged: false, project: null, tasks: [] };
@@ -40,11 +37,7 @@ class App extends React.Component {
     this.setState({ project: null });
   };
 
-  componentDidMount = () => {
-    if (sessionStorage.getItem("user")) {
-      this.reloadProjects();
-    }
-  };
+
 
   // reloadProjectTasks = project => {
   //   $.ajax({
@@ -69,49 +62,9 @@ class App extends React.Component {
     this.reloadProjects(user_logged);
   };
 
-  reloadProjects = user_logged => {
-    if (user_logged) {
-      getProjects()
-        .then(response => {
-          this.setState({ projects: response.data.data });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    } else {
-      this.setState({ projects: [], user_logged: user_logged });
-    }
-  };
 
   render() {
- 
-    return (
-      <div className="container">
-        <Header title="Projects Management" />
-        <Login user_logged={this.user_logged} />
-        <div className="row">
-          <div className="col-md-6">
-            <h2>Project Form</h2>
-            <button onClick={this.newProject} className="btn btn-success">
-              {" "}
-              New Project
-            </button>
-
-            <TasksList
-              tasks={this.state.tasks}
-              user_logged={this.state.user_logged}
-            />
-          </div>
-          <div className="col-md-6">
-            <Projects
-              projects={this.state.projects}
-              user_logged={this.state.user_logged}
-              handleProjectAction={this.handleProjectAction}
-            />
-          </div>
-        </div>
-      </div>
-    );
+    return <Router />;
   }
 }
 
